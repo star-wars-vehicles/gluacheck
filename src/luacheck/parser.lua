@@ -551,6 +551,7 @@ end
 
 local unary_operators = {
    ["not"] = "not",
+   ["!"] = "not",
    ["-"] = "unm",
    ["~"] = "bnot",
    ["#"] = "len"
@@ -566,7 +567,7 @@ local binary_operators = {
    ["&"] = "band", ["|"] = "bor", ["~"] = "bxor",
    ["<<"] = "shl", [">>"] = "shr",
    [".."] = "concat",
-   ["~="] = "ne", ["=="] = "eq",
+   ["~="] = "ne", ["!="] = "ne", ["=="] = "eq",
    ["<"] = "lt", ["<="] = "le",
    [">"] = "gt", [">="] = "ge",
    ["and"] = "and", ["or"] = "or"
@@ -849,6 +850,13 @@ end
 statements["break"] = function(state)
    local ast_node = new_outer_node(state, "Break")
    -- Skip "break".
+   skip_token(state)
+   return ast_node
+end
+
+statements["continue"] = function(state)
+   local ast_node = new_outer_node(state, "Continue")
+   -- Skip "continue"
    skip_token(state)
    return ast_node
 end

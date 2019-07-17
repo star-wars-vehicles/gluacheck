@@ -1,16 +1,16 @@
-package = "luacheck"
-version = "dev-1"
+package = "gluacheck"
+version = "dev-2"
 source = {
-   url = "git+https://github.com/mpeterv/luacheck.git"
+   url = "git+https://github.com/star-wars-vehicles/gluacheck.git"
 }
 description = {
-   summary = "A static analyzer and a linter for Lua",
+   summary = "A static analyzer and a linter for Garry's Mod Lua",
    detailed = [[
 Luacheck is a command-line tool for linting and static analysis of Lua code.
 It is able to spot usage of undefined global variables, unused local variables and
 a few other typical problems within Lua programs.
 ]],
-   homepage = "https://github.com/mpeterv/luacheck",
+   homepage = "https://github.com/star-wars-vehicles/gluacheck",
    license = "MIT"
 }
 dependencies = {

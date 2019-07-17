@@ -48,7 +48,7 @@ local function warn_unused_label(chstate, label)
    })
 end
 
-local pseudo_labels = utils.array_to_set({"do", "else", "break", "end", "return"})
+local pseudo_labels = utils.array_to_set({"do", "else", "break", "continue", "end", "return"})
 
 local Line = utils.class()
 
@@ -228,6 +228,8 @@ function LinState:leave_scope()
          if not prev_scope or prev_scope.line ~= self.lines.top then
             if goto_.name == "break" then
                parser.syntax_error("'break' is not inside a loop", goto_.range)
+            elseif goto_.name == "continue" then
+               parser.syntax_error("'continue' is not inside a loop", goto_.range)
             else
                parser.syntax_error(("no visible label '%s'"):format(goto_.name), goto_.range)
             end
@@ -396,6 +398,7 @@ function LinState:emit_stmt_Fornum(node)
    self:emit(new_local_item({{node[1]}}))
    self:register_var(node[1], "loopi")
    self:emit_stmts(node[5] or node[4])
+   self:register_label("continue")
    self:leave_scope()
    self:emit_noop(node, true)
    self:emit_goto("do")
@@ -413,6 +416,7 @@ function LinState:emit_stmt_Forin(node)
    self:emit(new_local_item({node[1]}))
    self:register_vars(node[1], "loop")
    self:emit_stmts(node[3])
+   self:register_label("continue")
    self:leave_scope()
    self:emit_noop(node, true)
    self:emit_goto("do")
@@ -453,6 +457,10 @@ end
 
 function LinState:emit_stmt_Break(node)
    self:emit_goto("break", false, node)
+end
+
+function LinState:emit_stmt_Continue(node)
+   self:emit_goto("continue", false, node)
 end
 
 function LinState:emit_stmt_Return(node)
